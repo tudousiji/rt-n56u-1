@@ -8,6 +8,43 @@ start_instance() {
 	port=""
 	args=""
 	secret="$(nvram get zerotier_secret)"
+
+  if [ -d ${config_path}"/moon.d" ];then
+    echo "moon.d文件存在，进行下一步处理";
+    logger -t "moon.d文件存在，进行下一步处理";
+    if [ -d ${config_path}"/moon.d" ];then
+      rmDir=${config_path}"/moon.d"
+      rm -rf ${rmDir}
+      echo "已删除文件夹:"${rmDir}
+      logger -t "已删除文件夹:"${rmDir}
+    fi
+
+    echo "开始创建文件夹"
+    logger -t "开始创建文件夹"
+
+    dirPath=${config_path}"/moon.d"
+    mkdir -vp ${dirPath}
+    echo "文件不存在,已创建:"${dirPath}
+    logger -t "文件不存在,已创建:"${dirPath}
+
+    cp -rf "/etc/storage/moon.d" ${config_path}
+
+    echo "文件复制完成"
+    logger -t  "文件复制完成"
+
+
+    #  for line in `zerotier-cli listpeers`
+  #  do
+  #  echo "$line"
+  #  done
+    echo "结束"
+    logger -t "结束"
+  else
+    echo "moon.d文件夹不存在，跳过处理"
+    logger -t "moon.d文件夹不存在，跳过处理"
+  fi
+
+
 	if [ ! -d "$config_path" ]; then
 		mkdir -p $config_path
 	fi
@@ -101,6 +138,10 @@ start_zero() {
 	kill_z
 	start_instance 'zerotier'
 
+  files="$(zerotier-cli listpeers)"
+  echo $files
+  logger -t "zerotier" "$files"
+  
 }
 kill_z() {
 	killall -9 zerotier-one
