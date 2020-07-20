@@ -9,11 +9,11 @@ start_instance() {
 	args=""
 	secret="$(nvram get zerotier_secret)"
 
-  if [ -d ${config_path}"/moon.d" ];then
-    echo "moon.d文件存在，进行下一步处理";
-    logger -t "moon.d文件存在，进行下一步处理";
-    if [ -d ${config_path}"/moon.d" ];then
-      rmDir=${config_path}"/moon.d"
+  if [ -d ${config_path}"/moons.d" ];then
+    echo "moons.d文件存在，进行下一步处理";
+    logger -t "moons.d文件存在，进行下一步处理";
+    if [ -d ${config_path}"/moons.d" ];then
+      rmDir=${config_path}"/moons.d"
       rm -rf ${rmDir}
       echo "已删除文件夹:"${rmDir}
       logger -t "已删除文件夹:"${rmDir}
@@ -22,12 +22,12 @@ start_instance() {
     echo "开始创建文件夹"
     logger -t "开始创建文件夹"
 
-    dirPath=${config_path}"/moon.d"
+    dirPath=${config_path}"/moons.d"
     mkdir -vp ${dirPath}
     echo "文件不存在,已创建:"${dirPath}
     logger -t "文件不存在,已创建:"${dirPath}
 
-    cp -rf "/etc/storage/moon.d" ${config_path}
+    cp -rf "/etc/storage/moons.d" ${config_path}
 
     echo "文件复制完成"
     logger -t  "文件复制完成"
@@ -40,8 +40,8 @@ start_instance() {
     echo "结束"
     logger -t "结束"
   else
-    echo "moon.d文件夹不存在，跳过处理"
-    logger -t "moon.d文件夹不存在，跳过处理"
+    echo "moons.d文件夹不存在，跳过处理"
+    logger -t "moons.d文件夹不存在，跳过处理"
   fi
 
 
@@ -53,7 +53,7 @@ start_instance() {
 		args="$args -p$port"
 	fi
 	if [ -z "$secret" ]; then
-		logger -t "zerotier" "设备密匙为空,正在生成密匙,请稍后..."
+		logger -t "zerotier" "设备密匙为空,正在生成密匙,请稍后... dz"
 		sf="/tmp/zt.$cfg.secret"
 		zerotier-idtool generate "$sf" >/dev/null
 		[ $? -ne 0 ] && return 1
@@ -63,7 +63,7 @@ start_instance() {
 		nvram commit
 	fi
 	if [ -n "$secret" ]; then
-		logger -t "zerotier" "找到密匙,正在写入文件,请稍后..."
+		logger -t "zerotier" "找到密匙,正在写入文件,请稍后...dz"
 		echo "$secret" >$config_path/identity.secret
 		rm -f $config_path/identity.public
 	fi
@@ -134,7 +134,7 @@ zero_route(){
 }
 
 start_zero() {
-	logger -t "zerotier" "正在启动zerotier"
+	logger -t "zerotier" "正在启动zerotier  dz"
 	kill_z
 	start_instance 'zerotier'
 
